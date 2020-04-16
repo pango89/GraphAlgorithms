@@ -24,6 +24,17 @@ namespace GraphAlgorithms
             this.adjacencyList[v].Add(u);
         }
 
+        public void DFS()
+        {
+            bool[] visited = new bool[this.vertices];
+
+            for (int i = 0; i < this.vertices; i++)
+            {
+                if (!visited[i])
+                    DFSUtil(i, visited);
+            }
+        }
+
         public void DFS(int i)
         {
             bool[] visited = new bool[this.vertices];
