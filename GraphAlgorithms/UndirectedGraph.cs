@@ -105,5 +105,40 @@ namespace GraphAlgorithms
                 }
             }
         }
+
+        public bool IsCyclic()
+        {
+            bool[] visited = new bool[this.vertices];
+
+            for (int i = 0; i < this.vertices; i++)
+            {
+                if (!visited[i])
+                    if (IsCyclicUtil(i, visited, -1))
+                        return true;
+            }
+
+            return false;
+        }
+
+        private bool IsCyclicUtil(int i, bool[] visited, int parent)
+        {
+            visited[i] = true;
+
+            foreach (int adjacent in this.adjacencyList[i])
+            {
+                if (visited[adjacent])
+                {
+                    if (adjacent != parent)
+                        return true;
+                }
+                else
+                {
+                    if (IsCyclicUtil(adjacent, visited, i))
+                        return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
