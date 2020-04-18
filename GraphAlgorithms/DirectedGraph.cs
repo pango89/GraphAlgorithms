@@ -23,6 +23,40 @@ namespace GraphAlgorithms
             this.adjacencyList[u].Add(v);
         }
 
+        // DFS for all vertex one by one
+        // Following implementation does the complete graph 
+        // traversal even if the nodes are unreachable.
+        public void DFS()
+        {
+            bool[] visited = new bool[this.vertices];
+
+            for (int i = 0; i < this.vertices; i++)
+            {
+                if (!visited[i])
+                {
+                    DFSUtil(i, visited);
+                    Console.WriteLine();
+                }
+            }
+        }
+
+        // DFS only for a given vertex
+        public void DFS(int i)
+        {
+            bool[] visited = new bool[this.vertices];
+            DFSUtil(i, visited);
+        }
+
+        private void DFSUtil(int i, bool[] visited)
+        {
+            Console.Write(i + " ");
+
+            visited[i] = true;
+            foreach (int adjacent in this.adjacencyList[i])
+                if (!visited[adjacent])
+                    DFSUtil(adjacent, visited);
+        }
+
         public void TopologicalSortKahns()
         {
             int[] inDegree = new int[this.vertices];
@@ -183,6 +217,87 @@ namespace GraphAlgorithms
             white,
             gray,
             black
+        }
+
+        private DirectedGraph TransposeGraph()
+        {
+            DirectedGraph transpose = new DirectedGraph(this.vertices);
+
+            for (int i = 0; i < this.vertices; i++)
+                foreach (int adjacent in this.adjacencyList[i])
+                    transpose.adjacencyList[adjacent].Add(i);
+
+            return transpose;
+        }
+
+        // Kosaraju's Algorithm to check if Directed Graph is Strongly connected or not
+        public bool IsStronglyConnected()
+        {
+            bool[] visited = new bool[this.vertices];
+
+            // Run DFS on any one node
+            this.DFSUtil(0, visited);
+
+            // After DFS, if any of the nodes is not visited then it is disconnected
+            for (int i = 0; i < this.vertices; i++)
+                if (!visited[i])
+                    return false;
+
+            // Now that the graph is connected, check if strongly connected or not
+
+            DirectedGraph transpose = this.TransposeGraph();
+
+            for (int i = 0; i < transpose.vertices; i++)
+                visited[i] = false;
+
+            // Run DFS on any one node
+            transpose.DFSUtil(0, visited);
+
+            // After DFS, if any of the nodes is not visited then it is disconnected
+            for (int i = 0; i < transpose.vertices; i++)
+                if (!visited[i])
+                    return false;
+
+            return true;
+        }
+
+        /// https://www.geeksforgeeks.org/strongly-connected-components/
+        /// Kosaraju's Algo to Print All SCCs 
+        public void PrintAllSCC()
+        {
+            bool[] visited = new bool[this.vertices];
+            Stack<int> stack = new Stack<int>();
+
+            for (int i = 0; i < this.vertices; i++)
+                if (!visited[i])
+                    this.FillStack(i, visited, stack);
+
+            DirectedGraph transpose = this.TransposeGraph();
+
+            for (int i = 0; i < transpose.vertices; i++)
+                visited[i] = false;
+
+            while(stack.Count > 0)
+            {
+                int next = stack.Pop();
+
+                if (!visited[next])
+                {
+                    transpose.DFSUtil(next, visited);
+                    Console.WriteLine();
+                }
+            }
+        }
+
+        private void FillStack(int i, bool[] visited, Stack<int> stack)
+        {
+            visited[i] = true;
+
+            foreach (int adjacent in this.adjacencyList[i])
+                if (!visited[adjacent])
+                    this.FillStack(adjacent, visited, stack);
+
+            stack.Push(i);
         }
     }
 }

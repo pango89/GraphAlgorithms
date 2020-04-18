@@ -18,20 +18,30 @@ namespace GraphAlgorithms
             //graph.BFS();
             // Console.WriteLine(graph.IsCyclic() ? "Cyclic" : "Not Cyclic");
 
-            DirectedGraph graph = new DirectedGraph(6);
-            graph.AddEdge(5, 2);
-            graph.AddEdge(5, 0);
-            graph.AddEdge(4, 0);
-            graph.AddEdge(4, 1);
-            graph.AddEdge(2, 3);
-            graph.AddEdge(3, 1);
-            graph.AddEdge(1, 5);
+            //DirectedGraph graph = new DirectedGraph(6);
+            //graph.AddEdge(5, 2);
+            //graph.AddEdge(5, 0);
+            //graph.AddEdge(4, 0);
+            //graph.AddEdge(4, 1);
+            //graph.AddEdge(2, 3);
+            //graph.AddEdge(3, 1);
+            //graph.AddEdge(1, 5);
 
             //graph.TopologicalSortKahns();
             //graph.TopologicalSortDFS();
 
             //graph.PrintAllTopologicalSorts();
-            Console.WriteLine(graph.IsCyclic() ? "Cyclic" : "Not Cyclic");
+            //Console.WriteLine(graph.IsCyclic() ? "Cyclic" : "Not Cyclic");
+
+            DirectedGraph graph = new DirectedGraph(5);
+            graph.AddEdge(1, 0);
+            graph.AddEdge(0, 2);
+            graph.AddEdge(2, 1);
+            graph.AddEdge(0, 3);
+            graph.AddEdge(3, 4);
+
+            // Console.WriteLine(graph.IsStronglyConnected() ? "SC" : "Not SC");
+            graph.PrintAllSCC();
         }
     }
 }
