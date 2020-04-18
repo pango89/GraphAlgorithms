@@ -137,5 +137,52 @@ namespace GraphAlgorithms
                 }
             }
         }
+
+        public bool IsCyclic()
+        {
+            bool[] visited = new bool[this.vertices];
+
+            Color[] vertexColors = new Color[this.vertices];
+            for (int i = 0; i < this.vertices; i++)
+                vertexColors[i] = Color.white;
+
+            for (int i = 0; i < this.vertices; i++)
+            {
+                if (!visited[i])
+                    if (IsCyclicUtil(i, visited, vertexColors))
+                        return true;
+            }
+
+            return false;
+        }
+
+        private bool IsCyclicUtil(int i, bool[] visited, Color[] vertexColors)
+        {
+            visited[i] = true;
+            vertexColors[i] = Color.gray;
+
+            foreach (int adjacent in this.adjacencyList[i])
+            {
+                if (!visited[adjacent])
+                    IsCyclicUtil(adjacent, visited, vertexColors);
+
+                if (vertexColors[adjacent] == Color.black)
+                    continue;
+
+                if (vertexColors[adjacent] == Color.gray)
+                    return true;
+            }
+
+            vertexColors[i] = Color.black;
+
+            return false;
+        }
+
+        public enum Color
+        {
+            white,
+            gray,
+            black
+        }
     }
 }
