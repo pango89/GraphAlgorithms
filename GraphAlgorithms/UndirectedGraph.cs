@@ -82,9 +82,6 @@ namespace GraphAlgorithms
 
         private void BFSUtil(int i, bool[] visited)
         {
-            if (visited[i])
-                return;
-
             Queue<int> queue = new Queue<int>();
             queue.Enqueue(i);
 
@@ -135,6 +132,70 @@ namespace GraphAlgorithms
                 {
                     if (IsCyclicUtil(adjacent, visited, i))
                         return true;
+                }
+            }
+
+            return false;
+        }
+
+        // Modified BFS
+        // Can work for Directed graph as well
+        // Each Edge costs 1
+        public void ShortestDistanceUnWeighted(int source, int destination)
+        {
+            int[] distance = new int[this.vertices];
+            int[] predecessor = new int[this.vertices];
+
+            bool found = this.ModifiedBFS(source, destination, distance, predecessor);
+
+            if (!found)
+            {
+                Console.WriteLine("Source and Destination are not connected!");
+                return;
+            }
+
+            List<int> path = new List<int>();
+
+            int start = destination;
+
+            while (start != source)
+            {
+                path.Add(start);
+                start = predecessor[start];
+            }
+
+            path.Add(source);
+
+            Console.WriteLine("Shortest path length is " + distance[destination]);
+            Console.Write("Shortest path is ");
+
+            for (int i = path.Count - 1; i >= 0; i--)
+                Console.Write(path[i] + " ");
+        }
+
+        private bool ModifiedBFS(int source, int destination, int[] distance, int[] predecessor)
+        {
+            bool[] visited = new bool[this.vertices];
+
+            Queue<int> queue = new Queue<int>();
+            queue.Enqueue(source);
+
+            while (queue.Count > 0)
+            {
+                int next = queue.Dequeue();
+                visited[next] = true;
+
+                foreach (int adjacent in this.adjacencyList[next])
+                {
+                    if (!visited[adjacent])
+                    {
+                        distance[adjacent] = distance[next] + 1;
+                        predecessor[adjacent] = next;
+                        queue.Enqueue(adjacent);
+
+                        if (adjacent == destination)
+                            return true;
+                    }
                 }
             }
 
